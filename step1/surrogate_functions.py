@@ -71,7 +71,7 @@ def categorical_encoding(df: pd.DataFrame) -> pd.DataFrame:
 
   return df_encoded
 
-def get_data():
+def get_data_step1():
     df = pd.read_csv('../dataproject2025.csv')
     df = df.dropna()
 

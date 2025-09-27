@@ -109,7 +109,7 @@ def plot_odds_ratio(coefs, columns):
     summary = pd.DataFrame({
         'feature': columns,
         'coeff': coefs,
-        'odds_ratio': np.exp(coefs)
+        'odds_ratio': np.clip(np.exp(coefs), 1e-6, 1e5)
     })
     summary['importance'] = np.abs(summary['coeff'])
     summary = summary.sort_values('importance', ascending=False)

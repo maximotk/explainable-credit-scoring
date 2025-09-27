@@ -17,7 +17,9 @@ numerical = ['issue_d', 'loan duration', 'annual_inc', 'avg_cur_bal',
     'mo_sin_rcnt_rev_tl_op', 'mo_sin_rcnt_tl', 'mort_acc',
     'mths_since_recent_bc', 'num_actv_bc_tl', 'num_bc_tl', 'num_il_tl',
     'num_rev_accts', 'open_acc', 'pub_rec', 'pub_rec_bankruptcies', 'revol_bal', 'revol_util',
-    'tax_liens', 'zip_code', 'Pct_afro_american']
+    'tax_liens', 'zip_code', 'Pct_afro_american', 'avg_cur_bal_log', 'revol_bal_log',
+    'cur_balance', 's_actv_bc_tl', 's_bc_tl', 's_il_tl', 's_rev_accts', 'revol_bal_income_ratio',
+    'sub_grade_num', 'emp_length_num']
 
 category = ['emp_length',
     'emp_title',
@@ -172,8 +174,11 @@ def get_data_step4():
 
     target_col = 'target'
     feature_cols = [col for col in df_encoded.columns if col not in ["target", "issue_d"]]
-    X_encoded = df_encoded[feature_cols]
+    X_encoded = df_encoded[feature_cols].reset_index(drop=True)
     y = df_encoded[target_col]
+
+    numerical_existing = [col for col in numerical if col in X_encoded.columns]
+    X_encoded.loc[:, numerical_existing] = StandardScaler().fit_transform(X_encoded[numerical_existing])
 
     return X_encoded, y
 
@@ -263,17 +268,14 @@ def plot_most_important_features(coefs, columns):
     y = np.arange(len(top))
 
     for i, row in top.iterrows():
-        or_val = row['importance']
-        xmin, xmax = (or_val, 1) if or_val < 1 else (1, or_val)
-        ax.hlines(y=i, xmin=xmin, xmax=xmax, linewidth=2, color='skyblue')
-        ax.plot(or_val, i, 'o', markersize=6, color='navy')
+        imp_val = row['importance']
+        ax.hlines(y=i, xmin=0, xmax=imp_val, color='skyblue', linewidth=2)
+        ax.plot(imp_val, i, 'o', markersize=6, color='navy')
 
-    ax.axvline(1, color='red', linestyle='--', linewidth=1)
     labels = top['group'] + top['n_levels'].apply(lambda n: ('' if n==1 else f' (n={int(n)})'))
     ax.set_yticks(y)
     ax.set_yticklabels(labels)
-    ax.set_xscale('log')
-    ax.set_xlabel('Representative Odds Ratio (exp(mean(coef))) — log scale')
+    ax.set_xlabel('Importance (mean(|coef|))')
     ax.set_title(f'Top {top_n} Feature Groups by mean(|coef|) (OHE groups aggregated)')
     ax.invert_yaxis()
     plt.subplots_adjust(left=0.35, right=0.95, top=0.92, bottom=0.08)

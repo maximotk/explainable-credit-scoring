@@ -7,6 +7,15 @@
 3. Solutions to Step 6 are in the ice_analysis.ipynb and lime_analysis.ipynb files
 4. Solutions to Step 9 and 10 are in the named files in the root directory.
 
+## Group Members:
+
+1. Martyna Harasym
+2. Maxim Ochterbeck
+3. João Silva
+4. Nischay Parekh
+5. Vassili de Rosen
+6. Laetitia Benayoun
+7. Samyukt Sriram
 
 To install requirements:
 

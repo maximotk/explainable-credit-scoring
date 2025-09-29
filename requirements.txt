@@ -16,6 +16,10 @@ seaborn>=0.11.0
 # Hyperparameter optimization
 optuna>=3.0.0
 
+# Lime implementatio
+lime
+shap
+
 # Additional dependencies that may be needed
 scipy>=1.9.0
 joblib>=1.2.0
